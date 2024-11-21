@@ -4,7 +4,7 @@ import { useSelector, useDispatch  } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addUser, removeUser } from "../utils/userSlice";
 import { useEffect } from "react";
-import { LOGO , USER_AVATAR} from "../utils/constants";
+import { LOGO} from "../utils/constants";
 
 
 const Header = () => {
@@ -34,10 +34,10 @@ const Header = () => {
         dispatch(removeUser());
         navigate("/");
       }
+    });
 
       // Unsubscribe when component unmounts
-      return () => unsubscribe();
-    });
+      return () => unsubscribe();  
   } , []);
 
   return (
@@ -52,8 +52,8 @@ const Header = () => {
           <img 
             className="w-12 h-12"
             alt="usericon" 
-            src= {USER_AVATAR}
-            //src={user?.photoURL}
+            // src= {USER_AVATAR}
+            src={user?.photoURL}
           />
           <button onClick ={handleSignOut} className="font-bold text-white">(Sign Out)</button>
       </div>

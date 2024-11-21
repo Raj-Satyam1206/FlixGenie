@@ -1,4 +1,4 @@
-import React, { useState , useRef} from 'react';
+import { useState , useRef} from 'react';
 import Header from './Header';
 import { checkValidate } from '../utils/validate';
 import {createUserWithEmailAndPassword , signInWithEmailAndPassword , updateProfile} from "firebase/auth";
@@ -20,7 +20,7 @@ const Login = () => {
 
   const handleValidate = () =>{
     //Validate the form data
-      const message = checkValidate(name.current.value , email.current.value, password.current.value);
+      const message = checkValidate(email.current.value, password.current.value);
       
       // console.log(name.current.value);
       // console.log(email.current.value);
@@ -53,7 +53,7 @@ const Login = () => {
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            setErrorMessage(errorCode + " " + errorMessage);
+            setErrorMessage(errorCode + "-" + errorMessage);
           });
       }
 
@@ -64,7 +64,7 @@ const Login = () => {
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
-            console.log(user);
+            // console.log(user);
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -80,7 +80,7 @@ const Login = () => {
 
 
   return (
-    <>
+    <div>
       <Header />
       <div className='absolute'>
           <img 
@@ -130,7 +130,7 @@ const Login = () => {
                 {isSignInForm ? "New to Netflix? Sign Up Now !!" : "Already a User? Sign In Now !!"}
           </p>
       </form>
-    </>
+    </div>
   )
 }
 
