@@ -4,12 +4,12 @@ import { useSelector, useDispatch  } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addUser, removeUser } from "../utils/userSlice";
 import { useEffect } from "react";
-import { LOGO} from "../utils/constants";
+import { LOGO , USER_AVATAR} from "../utils/constants";
 
 
 const Header = () => {
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
@@ -52,8 +52,8 @@ const Header = () => {
           <img 
             className="w-12 h-12"
             alt="usericon" 
-            // src= {USER_AVATAR}
-            src={user?.photoURL}
+            src= {USER_AVATAR}
+            // src={user?.photoURL}
           />
           <button onClick ={handleSignOut} className="font-bold text-white">(Sign Out)</button>
       </div>
