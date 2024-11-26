@@ -55,7 +55,10 @@ const Header = () => {
       />
       {user && (
         <div className="flex p-2">
-          <select className="p-2 m-2 bg-gray-900 text-white">
+          <select 
+            className="p-2 m-2 bg-gray-900 text-white"
+            onChange={handleLanguageChange}
+          >
             {/* <option value="en">English</option>
             <option value="spanish">Spanish</option>
             <option value="hindi">Hindi</option> */}
