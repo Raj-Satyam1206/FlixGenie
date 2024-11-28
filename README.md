@@ -1,4 +1,4 @@
-# Netflix GPT
+# FlixGenie
 
 - Create React App
 - Configured TailwindCSS
