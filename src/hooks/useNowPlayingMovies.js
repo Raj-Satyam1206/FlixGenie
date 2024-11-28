@@ -1,12 +1,15 @@
 
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { API_OPTIONS } from "../utils/constants";
 import { addNowPlayingMovies } from "../utils/moviesSlice";
 
 const useNowPlayingMovies = () => {
   //fetch the data and put it onto the store
   const dispatch = useDispatch();
+
+  //For Memoization
+  const nowPlayingMovies = useSelector((store) => store.movies.nowPlayingMovies);
 
  
   const getNowPlayingMovies = async () => {
@@ -20,7 +23,9 @@ const useNowPlayingMovies = () => {
   
 
   useEffect(()=>{
-    getNowPlayingMovies();
+    //If the store already has the data, then dont make unnecessary fetch calls
+    if(!nowPlayingMovies) 
+       getNowPlayingMovies();
   }, []);
 };
 
