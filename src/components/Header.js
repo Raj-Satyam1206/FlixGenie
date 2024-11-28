@@ -64,7 +64,7 @@ const Header = () => {
         <div className="flex p-2 justify-between">
           {showGptSearch && (
             <select 
-              className="p-2 m-2 bg-gray-900 text-white"
+              className="p-2 m-2 bg-gray-900 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black hover:bg-gray-800"
               onChange={handleLanguageChange}
             >
             {/* <option value="en">English</option>
