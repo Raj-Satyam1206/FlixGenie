@@ -23,7 +23,8 @@ const useNowPlayingMovies = () => {
   
 
   useEffect(()=>{
-    //If the store already has the data, then dont make unnecessary fetch calls
+    // Every time we return to the Browse page, we dont want to make an API call. 
+    // If the store already has the data, then dont make unnecessary fetch calls
     if(!nowPlayingMovies) 
        getNowPlayingMovies();
   }, []);
