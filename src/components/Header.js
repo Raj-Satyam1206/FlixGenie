@@ -34,6 +34,10 @@ const Header = () => {
     dispatch(changeLanguage(e.target.value));
   };
   
+  // This will be executed only once after the user signs in/ signs up/ signs out 
+  // Navigate must happen in the context of the <Router> component 
+  // That is , it should be used at a place which is present in the entire program. 
+  //That's why we use Header component for using the onAuthStateChanged() API and use the navigate logic
   useEffect(()=>{
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
