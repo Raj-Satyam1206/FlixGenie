@@ -37,12 +37,16 @@ const Login = () => {
           createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
           .then((userCredential) => {
             // Signed up 
+            // User Object
             const user = userCredential.user;
             updateProfile(user, {
               displayName: name.current.value,
               photoURL: USER_AVATAR,
             }).then(() => {
               // Profile updated!
+              // This is done so that as soon as the user is signed up, the redux store is updated with the display Name and photo URL.
+              // Therefore, apart from dispatching from the onAuthStatechange() API, we also dispatch from this API
+              // We use auth.currentUser as it holds the updated data of the user .
               const {uid , email , displayName , photoURL } = auth.currentUser;
               dispatch(addUser({uid : uid , email : email , displayName : displayName , photoURL: photoURL}));
             }).catch((error) => {
