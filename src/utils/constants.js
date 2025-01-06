@@ -27,6 +27,8 @@ export const SUPPORTED_LANGUAGES = [
   },
 ];
 
-export const OPENAI_KEY = process.env.REACT_APP_OPENAI_KEY ;
+
+// export const OPENAI_KEY = process.env.REACT_APP_OPENAI_KEY ;
+export const GROQ_KEY = process.env.REACT_APP_GROQ_API_KEY;
 
 
