@@ -1,4 +1,5 @@
-import openai from "../utils/openai";
+// import openai from "../utils/openai";
+import groq from "../utils/groqai";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import lang from "../utils/languageConstants";
@@ -19,12 +20,12 @@ const GptSearchBar = () => {
       API_OPTIONS
     );
     const json = await data.json();
-
+    // console.log("TMDB API Results for movie:", movie, json.results);
     return json.results;
   };
 
   const handleGptSearchClick = async () => {
-    console.log(searchText.current.value);
+    // console.log(searchText.current.value);
     // Make an API call to GPT API and get Movie Results
 
     const gptQuery =
@@ -32,16 +33,26 @@ const GptSearchBar = () => {
       searchText.current.value +
       ". only give me names of 5 movies, comma seperated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";
 
-    const gptResults = await openai.chat.completions.create({
-      messages: [{ role: "user", content: gptQuery }],
-      model: "gpt-3.5-turbo",
-    });
+    // const gptResults = await openai.chat.completions.create({
+    //   messages: [{ role: "user", content: gptQuery }],
+    //   model: "gpt-3.5-turbo",
+    // });
+
+    const gptResults = await groq.chat.completions.create({
+        messages: [{ role: "user", content: gptQuery }],
+        model: "llama3-8b-8192",
+        temperature: 0.5,
+        max_tokens: 1024,
+        top_p: 1,
+        stop: null,
+        stream: false,
+      });
 
     if (!gptResults.choices) {
-      // TODO: Write Error Handling
+        throw new Error("No results from GPT API.");
     }
 
-    console.log(gptResults.choices?.[0]?.message?.content);
+    // console.log(gptResults.choices?.[0]?.message?.content);
 
     // Andaz Apna Apna, Hera Pheri, Chupke Chupke, Jaane Bhi Do Yaaro, Padosan
     const gptMovies = gptResults.choices?.[0]?.message?.content.split(",");
@@ -55,11 +66,13 @@ const GptSearchBar = () => {
 
     const tmdbResults = await Promise.all(promiseArray);
 
-    console.log(tmdbResults);
+    // console.log(tmdbResults);
 
     dispatch(
       addGptMovieResult({ movieNames: gptMovies, movieResults: tmdbResults })
     );
+
+    // There is no need of an useEffect for this API call as this is an event triggered Api call and not used as any side effect.
   };
 
   return (
