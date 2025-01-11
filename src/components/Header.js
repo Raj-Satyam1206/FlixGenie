@@ -1,9 +1,9 @@
 import {auth} from "../utils/firebase"; 
 import {  onAuthStateChanged , signOut } from "firebase/auth";
 import { useSelector, useDispatch  } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { addUser, removeUser } from "../utils/userSlice";
-import { useEffect} from "react";
+import { useEffect, useRef} from "react";
 import { LOGO , SUPPORTED_LANGUAGES, USER_AVATAR} from "../utils/constants";
 import { toggleGptSearchView } from "../utils/gptSlice";
 import { changeLanguage } from "../utils/configSlice";
@@ -13,8 +13,10 @@ const Header = () => {
 
   const navigate = useNavigate(); 
   const dispatch = useDispatch();
+  const location = useLocation();
   const user = useSelector((store) => store.user);
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+  const authStateInitialized = useRef(false);
 
   const handleSignOut = () =>{
     signOut(auth).then(() => {
@@ -38,24 +40,51 @@ const Header = () => {
   // Navigate must happen in the context of the <Router> component 
   // That is , it should be used at a place which is present in the entire program. 
   //That's why we use Header component for using the onAuthStateChanged() API and use the navigate logic
-  useEffect(()=>{
+  // useEffect(()=>{
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       //User is signed In
+  //       const {uid , email , displayName } = user;
+  //       dispatch(addUser({uid : uid , email : email , displayName : displayName ,}));
+  //       console.log("Navigating to /browse");
+  //       navigate("/browse");
+  //     } 
+  //     else {
+  //       // User is signed out
+  //       dispatch(removeUser());
+  //       console.log("Navigating to /");
+  //       navigate("/");
+  //     }
+  //   });
+
+  //     // Unsubscribe when component unmounts
+  //     return () => unsubscribe();  
+  // } , []);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // console.log("Auth state changed:", user);
+
+      if (!authStateInitialized.current) {
+        authStateInitialized.current = true;
+        return; // Skip navigation on initial render
+      }
+
       if (user) {
-        //User is signed In
-        const {uid , email , displayName } = user;
-        dispatch(addUser({uid : uid , email : email , displayName : displayName ,}));
-        navigate("/browse");
-      } 
-      else {
-        // User is signed out
+        // console.log("Navigating to /browse");
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid, email, displayName, photoURL }));
+        // dispatch(addUser({ uid: user.uid, email: user.email, displayName: user.displayName }));
+        if (window.location.pathname !== "/browse") navigate("/browse");
+      } else {
+        // console.log("Navigating to /");
         dispatch(removeUser());
-        navigate("/");
+        if (window.location.pathname !== "/") navigate("/");
       }
     });
 
-      // Unsubscribe when component unmounts
-      return () => unsubscribe();  
-  } , []);
+    return () => unsubscribe();
+  }, [dispatch, navigate]);
 
   return (
     <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex flex-col md:flex-row justify-between">
@@ -64,7 +93,7 @@ const Header = () => {
         src={LOGO}
         alt="logo"
       />
-      {user && (
+      {user && location.pathname === "/browse" && (
         <div className="flex p-2 justify-between">
           {showGptSearch && (
             <select 
